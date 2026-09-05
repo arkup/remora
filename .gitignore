@@ -1,0 +1,86 @@
+# Build output
+bin/
+x64/
+Debug/
+Release/
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.suo
+*.sdf
+*.opensdf
+*.db
+*.opendb
+ipch/
+
+# Object files
+*.obj
+*.o
+*.pdb
+*.ilk
+*.exp
+*.lib
+*.idb
+
+# IDA Pro
+*.i64
+*.id0
+*.id1
+*.id2
+*.nam
+*.til
+
+# Logs and build output
+*.log
+log.txt
+build_out.txt
+
+# Temp
+*.tmp
+*.bak
+
+# Session/planning docs
+CLAUDE.md
+PLAN.md
+SESSION_STATE.md
+
+# Misc utilities
+script1_verify.py
+
+# Local AI/tool settings and Python cache
+.claude/
+__pycache__/
+*.py[cod]
+
+# Local runtime configuration and analysis output
+remora_config.ini
+dumps/
+dump_*.bin
+autodump_*.bin
+
+# Dump files
+*.dmp
+
+# Windows noise
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+nul
+
+# macOS noise
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Demo/test apps
+demoApp/
+
+# Secrets/certificates
+*.pem
+*.key
+*.pfx
+*.p12

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B1A2C3D4-2222-4000-A000-000000000002}</ProjectGuid>
+    <RootNamespace>hookdll</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\$(ProjectName)\</IntDir>
+    <TargetName>hookdll</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>..\common;..\zydis\include;..\zydis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HOOKDLL_EXPORTS;ZYDIS_STATIC_BUILD;ZYCORE_STATIC_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>kernel32.lib;user32.lib;ws2_32.lib;wininet.lib;advapi32.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>hookdll.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalOptions>/PDBALTPATH:%%_PDB%% %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.c" />
+    <ClCompile Include="hookengine.c" />
+    <ClCompile Include="eat_hook.c" />
+    <ClCompile Include="stubgen.c" />
+    <ClCompile Include="exports.c" />
+    <ClCompile Include="hook_file.c" />
+    <ClCompile Include="hook_process.c" />
+    <ClCompile Include="hook_memory.c" />
+    <ClCompile Include="hook_registry.c" />
+    <ClCompile Include="hook_network.c" />
+    <ClCompile Include="hook_http.c" />
+    <ClCompile Include="hook_crypto.c" />
+    <ClCompile Include="hook_module.c" />
+    <ClCompile Include="jail_eval.c" />
+    <ClCompile Include="..\common\ipc_client.c" />
+    <!-- Zydis sources -->
+    <ClCompile Include="..\zydis\src\Zydis.c" />
+    <ClCompile Include="..\zydis\src\Decoder.c" />
+    <ClCompile Include="..\zydis\src\DecoderData.c" />
+    <ClCompile Include="..\zydis\src\Disassembler.c" />
+    <ClCompile Include="..\zydis\src\Encoder.c" />
+    <ClCompile Include="..\zydis\src\EncoderData.c" />
+    <ClCompile Include="..\zydis\src\Formatter.c" />
+    <ClCompile Include="..\zydis\src\FormatterATT.c" />
+    <ClCompile Include="..\zydis\src\FormatterBase.c" />
+    <ClCompile Include="..\zydis\src\FormatterBuffer.c" />
+    <ClCompile Include="..\zydis\src\FormatterIntel.c" />
+    <ClCompile Include="..\zydis\src\MetaInfo.c" />
+    <ClCompile Include="..\zydis\src\Mnemonic.c" />
+    <ClCompile Include="..\zydis\src\Register.c" />
+    <ClCompile Include="..\zydis\src\Segment.c" />
+    <ClCompile Include="..\zydis\src\SharedData.c" />
+    <ClCompile Include="..\zydis\src\String.c" />
+    <ClCompile Include="..\zydis\src\Utils.c" />
+    <!-- Zycore sources -->
+    <ClCompile Include="..\zydis\zycore-src\Zycore.c" />
+    <ClCompile Include="..\zydis\zycore-src\Allocator.c" />
+    <ClCompile Include="..\zydis\zycore-src\Bitset.c" />
+    <ClCompile Include="..\zydis\zycore-src\Format.c" />
+    <ClCompile Include="..\zydis\zycore-src\List.c" />
+    <ClCompile Include="..\zydis\zycore-src\String.c">
+      <ObjectFileName>$(IntDir)zycore_String.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="..\zydis\zycore-src\Vector.c" />
+    <ClCompile Include="..\zydis\zycore-src\API\Memory.c" />
+    <ClCompile Include="..\zydis\zycore-src\API\Process.c" />
+    <ClCompile Include="..\zydis\zycore-src\API\Synchronization.c" />
+    <ClCompile Include="..\zydis\zycore-src\API\Terminal.c" />
+    <ClCompile Include="..\zydis\zycore-src\API\Thread.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="hookengine.h" />
+    <ClInclude Include="eat_hook.h" />
+    <ClInclude Include="stubgen.h" />
+    <ClInclude Include="exports.h" />
+    <ClInclude Include="..\common\ipc_common.h" />
+    <ClInclude Include="..\common\ipc_client.h" />
+    <ClInclude Include="..\common\hook_defs.h" />
+    <ClInclude Include="..\common\jail_defs.h" />
+    <ClInclude Include="..\common\jail_rules.h" />
+    <ClInclude Include="..\common\jail_shared.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="hookdll.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

@@ -1,0 +1,154 @@
+#include "resource.h"
+#include <windows.h>
+
+IDI_APPICON ICON "res\\remorahook.ico"
+IDB_LOGO BITMAP "res\\logo.bmp"
+
+IDD_OFN_ARGS DIALOG 0, 0, 370, 20
+STYLE WS_CHILD | WS_CLIPSIBLINGS
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "Arguments:", IDC_OT_ARGS_LABEL, 5, 5, 44, 10
+    EDITTEXT IDC_OT_ARGS_EDIT, 60, 3, 225, 14, ES_AUTOHSCROLL
+END
+
+IDM_MAINMENU MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&Open Target...\tCtrl+O",   IDM_FILE_OPEN
+        MENUITEM "&Launch\tF5",               IDM_FILE_LAUNCH
+        MENUITEM "&Save Log...\tCtrl+S",      IDM_FILE_SAVE_LOG
+        MENUITEM "Save Su&mmary Report...",    IDM_FILE_SAVE_SUMMARY
+        MENUITEM SEPARATOR
+        MENUITEM "&Terminate Target",         IDM_FILE_TERMINATE
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                     IDM_FILE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Clear Log\tCtrl+L",        IDM_VIEW_CLEAR
+        MENUITEM "&Find...\tCtrl+F",          IDM_VIEW_FILTER
+        MENUITEM SEPARATOR
+        MENUITEM "&Suspend Target\tF12",      IDM_EDIT_SUSPEND
+    END
+    POPUP "&View"
+    BEGIN
+        POPUP "F&ilter"
+        BEGIN
+            MENUITEM "&File",                 IDM_FILT_FILE, CHECKED
+            MENUITEM "&Process",              IDM_FILT_PROCESS, CHECKED
+            MENUITEM "&Memory",               IDM_FILT_MEMORY, CHECKED
+            MENUITEM "&Registry",             IDM_FILT_REGISTRY, CHECKED
+            MENUITEM "&Network",              IDM_FILT_NETWORK, CHECKED
+            MENUITEM "&HTTP",                 IDM_FILT_HTTP, CHECKED
+            MENUITEM "M&odule",               IDM_FILT_MODULE, CHECKED
+            MENUITEM "&Crypto",               IDM_FILT_CRYPTO, CHECKED
+            MENUITEM "&General",              IDM_FILT_GENERAL, CHECKED
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Memory Viewer",            IDM_VIEW_MEMVIEW
+        MENUITEM "&String Scanner",           IDM_VIEW_STRSCAN
+        MENUITEM "S&tack View",              IDM_VIEW_STACK
+        MENUITEM "M&odule Map",              IDM_VIEW_MODULES
+        MENUITEM "&Disassembly",             IDM_VIEW_DASM
+        MENUITEM SEPARATOR
+        MENUITEM "Sand&box Report\tCtrl+B",   IDM_VIEW_SANDBOX_RPT
+        MENUITEM SEPARATOR
+        MENUITEM "&Debug Logging",            IDM_VIEW_DEBUGLOG
+    END
+    POPUP "&Jail"
+    BEGIN
+        MENUITEM "&Policies...",              IDM_JAIL_POLICIES
+        MENUITEM "&Rules...\tCtrl+R",         IDM_JAIL_RULES
+        MENUITEM SEPARATOR
+        MENUITEM "(populated at runtime)",    0, GRAYED
+    END
+    POPUP "&Config"
+    BEGIN
+        MENUITEM "Log &Font...",                IDM_CFG_FONT
+        MENUITEM "&Auto Dump...",               IDM_CFG_AUTODUMP
+        MENUITEM SEPARATOR
+        MENUITEM "&Auto Scroll",                IDM_CFG_AUTOSCROLL, CHECKED
+        MENUITEM "&Buffer Capture",             IDM_CFG_BUFCAPTURE
+        MENUITEM "Trim &Noise",                 IDM_CFG_COALESCE
+        MENUITEM "Open disasm on log double-click", IDM_CFG_DASM_DBLCLK, CHECKED
+        MENUITEM "&Break at OEP",                IDM_CFG_BREAK_OEP, CHECKED
+        MENUITEM "Silence &Boring APIs (next run)", IDM_CFG_SILENCE_BORING
+        MENUITEM SEPARATOR
+        MENUITEM "Save Window &Position",       IDM_CFG_SAVEPOS
+        MENUITEM "Save &Settings",              IDM_CFG_SAVESETTINGS
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About Remora Hook...\tF1",  IDM_HELP_ABOUT
+    END
+END
+
+IDD_JAIL_RULES DIALOGEX 0, 0, 440, 280
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Jail Rules"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL "", IDC_RULES_LIST, "SysListView32", LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP, 4, 4, 432, 240
+    PUSHBUTTON "Add...", IDC_RULES_ADD, 4, 250, 50, 14
+    PUSHBUTTON "Edit...", IDC_RULES_EDIT, 58, 250, 50, 14
+    PUSHBUTTON "Delete", IDC_RULES_DEL, 112, 250, 50, 14
+    PUSHBUTTON "Move Up", IDC_RULES_UP, 170, 250, 50, 14
+    PUSHBUTTON "Move Down", IDC_RULES_DOWN, 224, 250, 50, 14
+    DEFPUSHBUTTON "Close", IDOK, 386, 250, 50, 14
+END
+
+IDD_RULE_EDIT DIALOGEX 0, 0, 300, 150
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Edit Rule"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "Hook:", -1, 8, 10, 40, 8
+    COMBOBOX IDC_RE_HOOK, 60, 8, 160, 200, CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+
+    LTEXT "String Match:", -1, 8, 30, 50, 8
+    COMBOBOX IDC_RE_STR_TYPE, 60, 28, 70, 100, CBS_DROPDOWNLIST | WS_TABSTOP
+    EDITTEXT IDC_RE_STR_PAT, 135, 28, 157, 12, ES_AUTOHSCROLL
+
+    LTEXT "Numeric:", -1, 8, 50, 50, 8
+    COMBOBOX IDC_RE_NUM_TYPE, 60, 48, 70, 100, CBS_DROPDOWNLIST | WS_TABSTOP
+    EDITTEXT IDC_RE_NUM_VAL, 135, 48, 157, 12, ES_AUTOHSCROLL
+
+    LTEXT "Action:", -1, 8, 70, 40, 8
+    COMBOBOX IDC_RE_ACTION, 60, 68, 70, 100, CBS_DROPDOWNLIST | WS_TABSTOP
+
+    AUTOCHECKBOX "Enabled", IDC_RE_ENABLED, 60, 88, 60, 10
+
+    LTEXT "String: path/host/subkey/name. Numeric: flags/port/size. Glob uses * and ?.", -1, 8, 106, 284, 16
+
+    DEFPUSHBUTTON "OK", IDOK, 186, 128, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 242, 128, 50, 14
+END
+
+IDD_CONDITION DIALOGEX 0, 0, 250, 68
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Condition"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT "Glob pattern (e.g. *.exe, 192.168.*, *password*):", IDC_COND_HINT, 8, 6, 234, 10
+    EDITTEXT IDC_COND_EDIT, 8, 18, 234, 14, ES_AUTOHSCROLL
+    DEFPUSHBUTTON "OK", IDOK, 72, 40, 50, 14
+    PUSHBUTTON "Clear", IDC_COND_CLEAR, 126, 40, 50, 14
+    PUSHBUTTON "Cancel", IDCANCEL, 180, 40, 50, 14
+END
+
+IDD_ABOUT DIALOGEX 0, 0, 234, 110
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About Remora Hook"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL "", IDC_ABOUT_LOGO, "Static", SS_BITMAP, 8, 8, 32, 32
+    LTEXT "Remora Hook v1.0 by arkup", -1, 46, 8, 180, 10
+    LTEXT "Win64 API monitor -- hooks in, rides along.", -1, 46, 22, 180, 10
+    LTEXT "MIT License", -1, 46, 36, 180, 10
+    LTEXT "", IDC_ABOUT_BUILD, 46, 50, 180, 10
+    LTEXT "github.com/arkup/remora", IDC_ABOUT_LINK, 46, 64, 180, 10, SS_NOTIFY
+    LTEXT "This software uses Zydis disassembler library.", -1, 46, 78, 180, 10
+    DEFPUSHBUTTON "OK", IDOK, 92, 92, 50, 14
+END
